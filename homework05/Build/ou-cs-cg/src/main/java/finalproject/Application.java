@@ -42,7 +42,7 @@ public final class Application
 	// Public Class Members
 	//**********************************************************************
 
-	public static final String		DEFAULT_NAME = "Solution04";
+	public static final String		DEFAULT_NAME = "Mini Golf";
 	public static final Dimension	DEFAULT_SIZE = new Dimension(800, 800);
 
 	//**********************************************************************

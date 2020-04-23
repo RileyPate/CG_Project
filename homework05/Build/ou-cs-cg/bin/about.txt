@@ -1,0 +1,102 @@
+//******************************************************************************
+// Copyright (C) 2019-2020 University of Oklahoma Board of Trustees.
+//******************************************************************************
+// Last modified: Wed Jan 22 16:14:47 2020 by Chris Weaver
+//******************************************************************************
+// Major Modification History:
+//
+// 20190118 [weaver]:   Original file.
+// 20200122 [weaver]:	Updated for Gradle 6.1.
+//
+//******************************************************************************
+
+
+
+//***** Getting Started **********************************************
+
+Building and running requires Java 1.8. Make sure it's installed.
+
+This build comes with Gradle version 6.1 included as the Gradle Wrapper.
+You can install Gradle on your system separately, but it's not required.
+
+On the command line, make sure you're in this file's parent directory.
+Type in Gradle commands (based on your system) to execute build tasks:
+
+  gradlew <task>              // ...if your system is Mac or Linux
+  gradlew.bat <task>          // ...if your system is Windows
+
+The most common commands used in development are summarized below.
+
+The shortcut command to run the project's 'base' application is:
+
+  gradlew run       // ...if your system is Mac or Linux
+  gradlew.bat run   // ...if your system is Windows
+
+To run other project applications, see the instructions for installDist below.
+
+Refer to Gradle's excellent online documentation to learn more:
+
+  Main site - https://gradle.org
+  User docs - https://docs.gradle.org/current/userguide/userguide.html
+  Directories - https://docs.gradle.org/current/userguide/directory_layout.html
+
+
+//***** General Commands *********************************************
+
+// View help...
+gradlew help                // ...about Gradle
+gradlew help --task <task>  // ...about a task
+
+// See a list of available tasks.
+gradlew tasks
+
+
+//***** Build Commands ***********************************************
+
+// Removes all build results. (NOTE: This only removes the build/ directory.
+// It doesn't remove the .gradle/ cache directory. It also doesn't remove
+// hidden system-specific files like .DS_Store on MacOS.)
+gradlew clean
+
+// Generate all project executables as command line applications.
+// Go to build/install/base/bin/ to run them. Use the .bat versions on Windows.
+// You can run them from the command line or by double-clicking them.
+gradlew installDist
+
+To add a project executable, open build.gradle, scroll down to the 'Alternative
+Start Scripts' section at the end, and follow the instructions. (You are welcome
+to adapt build.gradle for use in team projects, but don't change anything in
+the build.gradle included in homework assignments without consulting me first!)
+
+
+//***** Distribution Commands ****************************************
+
+// Generate all project executables as above, and bundle them in a zip file.
+// Go to build/distributions/ to find the zip file.
+gradlew distZip
+
+
+//***** Documentation Commands ***************************************
+
+// Generate javadoc for the project.
+gradlew javadoc
+
+
+//***** Bundling (Shadow Jar) Commands *********
+
+// Bundle the project's 'base' application in a cross-platform executable jar.
+// Launch it like any other app. It should work on any system with Java 8.
+// Go to build/libs/ and look for the base-app-*.jar file.
+gradlew shadowJar
+
+
+// ***** IDE Commands ************************************************
+
+// Generate Eclipse configuration files for each subproject.
+gradlew eclipse
+
+// Remove Eclipse configuration files for each subproject.
+gradlew cleanEclipse
+
+
+//******************************************************************************

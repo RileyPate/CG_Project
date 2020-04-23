@@ -1,0 +1,245 @@
+//******************************************************************************
+// Copyright (C) 2016-2020 University of Oklahoma Board of Trustees.
+//******************************************************************************
+// Last modified: Wed Jan 22 16:14:51 2020 by Chris Weaver
+//******************************************************************************
+// Major Modification History:
+//
+// 20160209 [weaver]:	Original file.
+// 20190122 [weaver]:   Updated for Gradle 5.1.
+// 20200122 [weaver]:	Updated for Gradle 6.1.
+//
+//******************************************************************************
+
+plugins
+{
+    // https://docs.gradle.org/current/userguide/java_plugin.html
+    id 'java'
+
+    // https://docs.gradle.org/current/userguide/application_plugin.html
+    id 'application'
+
+    // https://docs.gradle.org/current/userguide/eclipse_plugin.html
+    id 'eclipse'
+
+    // https://plugins.gradle.org/plugin/com.github.johnrengelman.plugin-shadow
+    // https://github.com/johnrengelman/shadow
+    // version works for Gradle 5+ and Java 7+
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+}
+
+//******************************************************************************
+
+group = "ou.cs.cg"
+version = '1.1.0'
+
+def appClassName = "edu.ou.cs.cg.example.Base"
+
+def altJvmArgs = ['-Xms256m', '-Xmx768m', '-noclassgc',\
+    '-Dfile.encoding=utf-8', '-Dapple.laf.useScreenMenuBar=false',\
+    '-Dapple.awt.showGrowBox=true', '-Dapple.awt.brushMetalLook=false',\
+    '-Dapple.awt.antialiasing=on', '-Dapple.awt.graphics.UseQuartz=true']
+
+//******************************************************************************
+// Plugin Configuration (java)
+//******************************************************************************
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets
+{
+    main
+    {
+        resources
+        {
+            srcDir 'src/main/java'
+            //include ".*.rsrc"
+            exclude "**/.DS_Store", "**/*.java.*"
+        }
+    }
+}
+
+jar
+{
+    manifest
+    {
+        attributes\
+            'Implementation-Title': 'ou-cs-cg',\
+            'Implementation-Version': archiveVersion,\
+            'Main-Class': appClassName
+
+            manifest.attributes provider: 'tribe7.net'
+            manifest.attributes permissions: 'all-permissions'
+            manifest.attributes codebase: '*'
+    }
+}
+
+javadoc
+{
+    maxMemory '256m'
+}
+
+tasks.withType(JavaCompile)
+{
+    // Run the compiler as a separate process for performance
+    options.fork = true
+
+    // docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html
+    // Uncomment out one the following to choose lint warnings to show
+    options.compilerArgs << "-Xlint:all"
+    //options.compilerArgs << "-Xlint:none"
+}
+
+//******************************************************************************
+// Plugin Configuration (application)
+//******************************************************************************
+
+applicationName = "base"
+
+mainClassName = appClassName
+
+applicationDefaultJvmArgs = altJvmArgs
+
+//******************************************************************************
+// Plugin Configuration (eclipse)
+//******************************************************************************
+
+//eclipse.classpath.downloadJavadoc = true
+
+//******************************************************************************
+// Plugin Configuration (shadow)
+//******************************************************************************
+// See https://imperceptiblethoughts.com/shadow/introduction/
+
+shadowJar
+{
+    archiveBaseName = applicationName + "-app"
+}
+
+//******************************************************************************
+// Dependencies
+//******************************************************************************
+
+repositories
+{
+    mavenCentral()
+}
+
+// DO NOT ADD OR CHANGE DEPENDENCIES WITHOUT EXPLICIT INSTRUCTOR PERMISSION!!!
+dependencies
+{
+    // Apache Commons CSV (commons.apache.org)
+    //implementation ('org.apache.commons:commons-csv:1.7')
+
+    // Apache Commons IO (commons.apache.org)
+    //implementation ('commons-io:commons-io:2.6')
+
+    // Apache Commons Lang (commons.apache.org/)
+    //implementation ('org.apache.commons:commons-lang3:3.9')
+
+    // JOGL (jogamp.org)
+    implementation ('org.jogamp.jogl:jogl-all-main:2.3.2') { transitive = true }
+    implementation ('org.jogamp.gluegen:gluegen-rt-main:2.3.2') { transitive = true }
+}
+
+//******************************************************************************
+// Helper Code for Alternative Start Scripts
+//******************************************************************************
+
+// Creates a script for an additional execution entry points (main() method)
+// Must apply 'application' plugin to be able to call this method.
+// Adapted from http://stackoverflow.com/questions/18421857/
+// See also http://stackoverflow.com/questions/21241767/
+def createScript(project, jvmOpts, name, mainClass)
+{
+    project.tasks.create(name: name, type: CreateStartScripts)
+    {
+        applicationName = name
+        mainClassName   = mainClass
+        defaultJvmOpts  = jvmOpts
+        outputDir       = new File(project.buildDir, 'scripts')
+        classpath       = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files + project.configurations.runtimeClasspath
+    }
+
+    project.tasks[name].dependsOn(project.jar)
+
+    project.applicationDistribution.with
+    {
+        into("bin")
+        {
+            from(project.tasks[name])
+            fileMode = 0755
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
+    }
+}
+
+//******************************************************************************
+// Alternative Start Scripts
+//******************************************************************************
+
+// To create an additional script for running the main() of a particular class,
+// copy and uncomment the template line below. Put the desired script name in
+// the third argument and the fully qualified classname of the desired main()
+// class in the fourth argument.
+//createScript(project, altJvmArgs, 'myscript', 'edu.ou.cs.cg.my.MainClass')
+
+// These are single-class applications in the 'example' package
+createScript(project, altJvmArgs, 'gasket', 'edu.ou.cs.cg.example.Gasket')
+createScript(project, altJvmArgs, 'lorenz', 'edu.ou.cs.cg.example.Lorenz')
+createScript(project, altJvmArgs, 'polygons', 'edu.ou.cs.cg.example.Polygons')
+////createScript(project, altJvmArgs, 'shading', 'edu.ou.cs.cg.example.Shading')
+createScript(project, altJvmArgs, 'viewport', 'edu.ou.cs.cg.example.Viewport')
+createScript(project, altJvmArgs, 'viewgrid', 'edu.ou.cs.cg.example.Viewgrid')
+////createScript(project, altJvmArgs, 'wireframe', 'edu.ou.cs.cg.example.Wireframe')
+
+// These are multi-class applications in 'application' subpackages
+createScript(project, altJvmArgs, 'interaction',
+             'edu.ou.cs.cg.application.interaction.Application')
+createScript(project, altJvmArgs, 'reflect',
+             'edu.ou.cs.cg.application.reflect.Application')
+////createScript(project, altJvmArgs, 'scene',
+////             'edu.ou.cs.cg.application.scene.Application')
+////createScript(project, altJvmArgs, 'shape',
+////             'edu.ou.cs.cg.application.shape.Application')
+////createScript(project, altJvmArgs, 'street',
+////             'edu.ou.cs.cg.application.street.Application')
+////createScript(project, altJvmArgs, 'texture',
+////             'edu.ou.cs.cg.application.texture.Application')
+createScript(project, altJvmArgs, 'transform',
+             'edu.ou.cs.cg.application.transform.Application')
+
+// This is for testing data used in the interaction application
+//createScript(project, altJvmArgs, 'network-test',
+//             'edu.ou.cs.cg.application interaction.Network')
+
+// These will be uncommented successively for each homework assignment.
+createScript(project, altJvmArgs, 'hw01',
+             'edu.ou.cs.cg.assignment.homework01.Application')
+createScript(project, altJvmArgs, 'hw02',
+             'edu.ou.cs.cg.assignment.homework02.Application')
+createScript(project, altJvmArgs, 'hw03',
+             'edu.ou.cs.cg.assignment.homework03.Application')
+createScript(project, altJvmArgs, 'hw04',
+             'edu.ou.cs.cg.assignment.homework04.Application')
+createScript(project, altJvmArgs, 'hw05',
+             'edu.ou.cs.cg.assignment.homework05.Application')
+////createScript(project, altJvmArgs, 'hw06',
+////             'edu.ou.cs.cg.assignment.homework06.Application')
+
+// These will be uncommented successively after each homework assignment.
+createScript(project, altJvmArgs, 'hw01chris',
+             'edu.ou.cs.cg.assignment.solution01.Application')
+createScript(project, altJvmArgs, 'hw02chris',
+             'edu.ou.cs.cg.assignment.solution02.Application')
+//createScript(project, altJvmArgs, 'hw03chris',
+//             'edu.ou.cs.cg.assignment.solution03.Application')
+createScript(project, altJvmArgs, 'hw04chris',
+             'edu.ou.cs.cg.assignment.solution04.Application')
+//createScript(project, altJvmArgs, 'hw05chris',
+//             'edu.ou.cs.cg.assignment.solution05.Application')
+//createScript(project, altJvmArgs, 'hw06chris',
+//             'edu.ou.cs.cg.assignment.solution06.Application')
+
+//******************************************************************************
