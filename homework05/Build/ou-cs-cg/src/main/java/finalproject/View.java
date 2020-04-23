@@ -81,8 +81,10 @@ public final class View
 	private final Deque<Point2D.Double>				tracing;
 	private final Deque<Point2D.Double>				bounces;
 
-	private double						dx = 1.0 / DEFAULT_FRAMES_PER_SECOND;
-	private double						dy = 1.0 / DEFAULT_FRAMES_PER_SECOND;
+	//private double						dx = 1.0 / DEFAULT_FRAMES_PER_SECOND;
+	//private double						dy = 1.0 / DEFAULT_FRAMES_PER_SECOND;
+	private double						dx = 0.0;
+	private double						dy = 0.0;
 
 	//**********************************************************************
 	// Constructors and Finalizer
@@ -105,7 +107,7 @@ public final class View
 
 		for (int i=MIN_SIDES; i<=MAX_SIDES; i++)
 			regions.add(createPolygon(i));
-		
+
 		
 		//Defines all of the locations for the holes.
 		holeLocations = new ArrayList<Point2D.Double>();
@@ -204,7 +206,11 @@ public final class View
 	private void	update(GLAutoDrawable drawable)
 	{
 		counter++;									// Advance animation counter
-
+		
+		
+		dx = model.getRealPower();
+		dy = model.getRealPower();
+		
 		Deque<Point2D.Double>	polygon = getCurrentCourse();
 		Point2D.Double			q = model.getObject();
 
@@ -216,6 +222,10 @@ public final class View
 
 		while (bounces.size() > DEFAULT_FRAMES_PER_SECOND)
 			bounces.removeFirst();
+		if(dx>0.0 && dy >0.0) {
+			model.setRealPower(dx-.1);
+		}
+		
 	}
 
 	private void	render(GLAutoDrawable drawable)

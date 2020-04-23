@@ -73,6 +73,18 @@ public final class KeyHandler extends KeyAdapter
 			case KeyEvent.VK_W:	// Sort through golf courses
 				model.setNumber(Math.min(number + 1, View.MAX_SIDES));
 				break;
+			
+			case KeyEvent.VK_UP:	// Sort through golf courses
+				model.powerUp();
+				break;
+			
+			case KeyEvent.VK_DOWN:	// Sort through golf courses
+				model.powerDown();
+				break;
+				
+			case KeyEvent.VK_SPACE:	// Sort through golf courses
+				model.setRealPower();
+				break;
 
 		}
 	}

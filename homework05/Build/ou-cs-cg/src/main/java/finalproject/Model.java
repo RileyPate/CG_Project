@@ -60,6 +60,8 @@ public final class Model
 	private Point2D.Double				object;	// Current object coords
 	private int							number;	// Which golf course we are on
 	private double						factor;	// Speed multiplier
+	private double						power; // power level for bar
+	private double 						realPower;// power level actually sent
 
 	//**********************************************************************
 	// Constructors and Finalizer
@@ -70,10 +72,12 @@ public final class Model
 		this.view = view;
 
 		// Initialize user-adjustable variables (with reasonable default values)
-		object = new Point2D.Double(0.0, 0.0);
+		object = new Point2D.Double(0.0,0.0);
 		cursor = null;
 		number = 2;
 		factor = 1.0;
+		power = 0.0;
+		realPower=0.0;
 	}
 
 	//**********************************************************************
@@ -102,10 +106,44 @@ public final class Model
 	{
 		return factor;
 	}
+	
+	public double getPower() {
+		return power;
+	}
+	
+	public double getRealPower() {
+		return realPower;
+	}
 
 	//**********************************************************************
 	// Public Methods (Modify Variables)
 	//**********************************************************************
+
+	public void powerUp() {
+		if(power<2.0) {
+			power+=.02;
+		}
+	}
+	
+	public void powerDown() {
+		if(power>0.0) {
+			power-=.02;
+		}
+	}
+	
+	public void setRealPower(double pow) {
+		realPower= pow;
+		if(realPower<0.0) {
+			realPower=  0.0;
+		}
+	}
+	
+	public void setRealPower() {
+		if(realPower<=0.0) {
+			realPower= power;
+		}
+		power=0.0;
+	}
 
 	public void	setCursorInViewCoordinates(Point q)
 	{
