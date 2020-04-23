@@ -85,6 +85,7 @@ public final class View
 	//private double						dy = 1.0 / DEFAULT_FRAMES_PER_SECOND;
 	private double						dx = 0.0;
 	private double						dy = 0.0;
+	private double						slowDown = .10 / DEFAULT_FRAMES_PER_SECOND;
 
 	//**********************************************************************
 	// Constructors and Finalizer
@@ -208,8 +209,8 @@ public final class View
 		counter++;									// Advance animation counter
 		
 		
-		dx = model.getRealPower();
-		dy = model.getRealPower();
+		dx = model.getRealPowerX();
+		dy = model.getRealPowerY();
 		
 		Deque<Point2D.Double>	polygon = getCurrentCourse();
 		Point2D.Double			q = model.getObject();
@@ -222,8 +223,18 @@ public final class View
 
 		while (bounces.size() > DEFAULT_FRAMES_PER_SECOND)
 			bounces.removeFirst();
-		if(dx>0.0 && dy >0.0) {
-			model.setRealPower(dx-.1);
+		if(dx>0.0) {
+			model.setRealPowerX(dx-slowDown);
+		}
+		else if(dx<0.0) {
+			model.setRealPowerX(dx+slowDown);
+		}
+		
+		if(dy>0.0) {
+			model.setRealPowerX(dy-slowDown);
+		}
+		else if(dy<0.0) {
+			model.setRealPowerX(dy+slowDown);
 		}
 		
 	}
@@ -650,6 +661,8 @@ public final class View
 
 				dx -= 2.0 * dot2 * ndx;
 				dy -= 2.0 * dot2 * ndy;
+				model.setRealPowerX(dx);
+				model.setRealPowerY(dy);
 			}
 		}
 	}

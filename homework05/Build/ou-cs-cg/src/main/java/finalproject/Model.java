@@ -61,7 +61,8 @@ public final class Model
 	private int							number;	// Which golf course we are on
 	private double						factor;	// Speed multiplier
 	private double						power; // power level for bar
-	private double 						realPower;// power level actually sent
+	private double 						realPowerX;// power level actually sent
+	private double						realPowerY;
 
 	//**********************************************************************
 	// Constructors and Finalizer
@@ -77,7 +78,8 @@ public final class Model
 		number = 2;
 		factor = 1.0;
 		power = 0.0;
-		realPower=0.0;
+		realPowerX=0.0;
+		realPowerY=0.0;
 	}
 
 	//**********************************************************************
@@ -111,8 +113,12 @@ public final class Model
 		return power;
 	}
 	
-	public double getRealPower() {
-		return realPower;
+	public double getRealPowerX() {
+		return realPowerX;
+	}
+	
+	public double getRealPowerY() {
+		return realPowerY;
 	}
 
 	//**********************************************************************
@@ -131,16 +137,61 @@ public final class Model
 		}
 	}
 	
-	public void setRealPower(double pow) {
-		realPower= pow;
-		if(realPower<0.0) {
-			realPower=  0.0;
+	public void setRealPowerX(double pow) {
+		if(realPowerX>0) {
+			if(pow<0) {
+				realPowerX=0.0;
+			}
+			else {
+				realPowerX = pow;
+			}
+		}
+		else if(realPowerX<0) {
+			if(pow >0) {
+				realPowerX=0.0;
+			}
+			else {
+				realPowerX = pow;
+			}
+		}
+		else {
+			realPowerX=0.0;
+		}
+		
+	}
+	
+	public void setRealPowerX() {
+		if(realPowerX==0.0) {
+			realPowerX= power;
+		}
+		power=0.0;
+	}
+	
+	public void setRealPowerY(double pow) {
+		if(realPowerY>0) {
+			if(pow<0) {
+				realPowerY=0.0;
+			}
+			else {
+				realPowerY = pow;
+			}
+		}
+		else if(realPowerY<0) {
+			if(pow >0) {
+				realPowerY=0.0;
+			}
+			else {
+				realPowerY = pow;
+			}
+		}
+		else {
+			realPowerY=0.0;
 		}
 	}
 	
-	public void setRealPower() {
-		if(realPower<=0.0) {
-			realPower= power;
+	public void setRealPowerY() {
+		if(realPowerY==0.0) {
+			realPowerY= power;
 		}
 		power=0.0;
 	}

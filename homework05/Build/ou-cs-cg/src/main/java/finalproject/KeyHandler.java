@@ -83,7 +83,8 @@ public final class KeyHandler extends KeyAdapter
 				break;
 				
 			case KeyEvent.VK_SPACE:	// Sort through golf courses
-				model.setRealPower();
+				model.setRealPowerX();
+				model.setRealPowerY();
 				break;
 
 		}
