@@ -85,7 +85,7 @@ public final class View
 	//private double						dy = 1.0 / DEFAULT_FRAMES_PER_SECOND;
 	private double						dx = 0.0;
 	private double						dy = 0.0;
-	private double						slowDown = .10 / DEFAULT_FRAMES_PER_SECOND;
+	private double						slowDownRate = .9;
 
 	//**********************************************************************
 	// Constructors and Finalizer
@@ -223,47 +223,23 @@ public final class View
 
 		while (bounces.size() > DEFAULT_FRAMES_PER_SECOND)
 			bounces.removeFirst();
-		if(dx>0.0) {
-			dx-=slowDown;
-			if(dx>0) {
-				model.setRealPowerX(dx);
-			}
-			else {
-				model.setRealPowerX(0.0);
-			}
-			
+		
+		dx*=slowDownRate;
+		if(dx<.001 && dx>-.001) {
+			model.setRealPowerX(0.0);
 		}
-		else if(dx<0.0) {
-			dx+=slowDown;
-			if(dx<0) {
-				model.setRealPowerX(dx);
-			}
-			else {
-				model.setRealPowerX(0.0);
-			}
-			
+		else{
+			model.setRealPowerX(dx);
 		}
 		
-		if(dy>0.0) {
-			dy-=slowDown;
-			if(dy>0) {
-				model.setRealPowerY(dy);
-			}
-			else {
-				model.setRealPowerY(0.0);
-			}
-			
+		dy*=slowDownRate;
+		if(dy<.001 && dy>-.001) {
+			model.setRealPowerY(0.0);
 		}
-		else if(dy<0.0) {
-			dy+=slowDown;
-			if(dy<0) {
-				model.setRealPowerY(dy);
-			}
-			else {
-				model.setRealPowerY(0.0);
-			}
-			
+		else{
+			model.setRealPowerY(dy);
 		}
+		
 		
 	}
 
@@ -310,6 +286,7 @@ public final class View
 		drawHole(gl);
 		drawBall(gl);						// The moving object
 		drawCursor(gl);						// Cursor around the mouse point
+		drawAim(gl);						//Draw the aiming cursor
 	}
 
 	
@@ -355,6 +332,8 @@ public final class View
 		gl.glEnd();
 
 	}
+	
+	
 		
 		
 		
@@ -425,6 +404,31 @@ public final class View
 						  object.y + 0.02 * Math.sin(theta));
 		}
 		gl.glEnd();	
+	}
+	
+	//Draw the aim cursor
+	private void drawAim(GL2 gl) {
+		if((dx==0.0) && (dy==0.0)) {
+			Point2D.Double			q = model.getObject();
+			double radius = model.getPower();
+			double angle = model.getAngle();
+			double x = radius*Math.cos(angle) + q.x;
+			double y = radius*Math.sin(angle) + q.y;
+			gl.glColor3f(0.0f, 1.0f, 1.0f);
+				
+			gl.glBegin(GL2.GL_POLYGON);
+
+				
+			//Fills the aim dot
+			gl.glVertex2d(x+.01, y+.01);
+			gl.glVertex2d(x+.01, y-.01);
+			gl.glVertex2d(x-.01, y-.01);
+			gl.glVertex2d(x-.01, y+.01);
+			gl.glVertex2d(x+.01, y+.01);
+			gl.glEnd();
+			
+		}
+		
 	}
 
 

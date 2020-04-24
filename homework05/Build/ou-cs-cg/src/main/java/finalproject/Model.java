@@ -35,7 +35,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.*;
 import com.jogamp.opengl.*;
-
+import java.math.*;
 import utilities.Utilities;
 
 //******************************************************************************
@@ -63,6 +63,7 @@ public final class Model
 	private double						power; // power level for bar
 	private double 						realPowerX;// power level actually sent
 	private double						realPowerY;
+	private double 						angle; 
 
 	//**********************************************************************
 	// Constructors and Finalizer
@@ -77,9 +78,10 @@ public final class Model
 		cursor = null;
 		number = 2;
 		factor = 1.0;
-		power = 0.0;
+		power = 0.1;
 		realPowerX=0.0;
 		realPowerY=0.0;
+		angle = Math.PI/2;
 	}
 
 	//**********************************************************************
@@ -120,19 +122,31 @@ public final class Model
 	public double getRealPowerY() {
 		return realPowerY;
 	}
+	
+	public double getAngle() {
+		return angle;
+	}
 
 	//**********************************************************************
 	// Public Methods (Modify Variables)
 	//**********************************************************************
 
+	public void increaseAngle() {
+		angle+=.1;
+	}
+	
+	public void decreaseAngle() {
+		angle-=.1;
+	}
+	
 	public void powerUp() {
-		if(power<2.0) {
+		if(power<.7) {
 			power+=.02;
 		}
 	}
 	
 	public void powerDown() {
-		if(power>0.0) {
+		if(power>0.02) {
 			power-=.02;
 		}
 	}
@@ -144,7 +158,7 @@ public final class Model
 	
 	public void setRealPowerX() {
 		if(realPowerX==0.0) {
-			realPowerX= power;
+			realPowerX= power*Math.cos(angle);
 		}
 	}
 	
@@ -154,9 +168,9 @@ public final class Model
 	
 	public void setRealPowerY() {
 		if(realPowerY==0.0) {
-			realPowerY= power;
+			realPowerY= power*Math.sin(angle);;
 		}
-		power=0.0;
+		power=0.1;
 	}
 
 	public void	setCursorInViewCoordinates(Point q)

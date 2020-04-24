@@ -74,13 +74,22 @@ public final class KeyHandler extends KeyAdapter
 				model.setNumber(Math.min(number + 1, View.MAX_SIDES));
 				break;
 			
-			case KeyEvent.VK_UP:	// Sort through golf courses
+			case KeyEvent.VK_UP:	// Increase Power level
 				model.powerUp();
 				break;
 			
-			case KeyEvent.VK_DOWN:	// Sort through golf courses
+			case KeyEvent.VK_DOWN:	// Decrease Power level
 				model.powerDown();
 				break;
+				
+			case KeyEvent.VK_LEFT:	// Increase angle for aim (counterclockwise move)
+				model.increaseAngle();
+				break;
+			
+			case KeyEvent.VK_RIGHT:	// Decrease angle for aim (clockwise move)
+				model.decreaseAngle();
+				break;
+				
 				
 			case KeyEvent.VK_SPACE:	// Sort through golf courses
 				model.setRealPowerX();
