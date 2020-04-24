@@ -138,25 +138,7 @@ public final class Model
 	}
 	
 	public void setRealPowerX(double pow) {
-		if(realPowerX>0) {
-			if(pow<0) {
-				realPowerX=0.0;
-			}
-			else {
-				realPowerX = pow;
-			}
-		}
-		else if(realPowerX<0) {
-			if(pow >0) {
-				realPowerX=0.0;
-			}
-			else {
-				realPowerX = pow;
-			}
-		}
-		else {
-			realPowerX=0.0;
-		}
+		realPowerX=pow;
 		
 	}
 	
@@ -164,29 +146,10 @@ public final class Model
 		if(realPowerX==0.0) {
 			realPowerX= power;
 		}
-		power=0.0;
 	}
 	
 	public void setRealPowerY(double pow) {
-		if(realPowerY>0) {
-			if(pow<0) {
-				realPowerY=0.0;
-			}
-			else {
-				realPowerY = pow;
-			}
-		}
-		else if(realPowerY<0) {
-			if(pow >0) {
-				realPowerY=0.0;
-			}
-			else {
-				realPowerY = pow;
-			}
-		}
-		else {
-			realPowerY=0.0;
-		}
+		realPowerY=pow;
 	}
 	
 	public void setRealPowerY() {

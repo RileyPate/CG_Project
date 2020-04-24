@@ -224,17 +224,45 @@ public final class View
 		while (bounces.size() > DEFAULT_FRAMES_PER_SECOND)
 			bounces.removeFirst();
 		if(dx>0.0) {
-			model.setRealPowerX(dx-slowDown);
+			dx-=slowDown;
+			if(dx>0) {
+				model.setRealPowerX(dx);
+			}
+			else {
+				model.setRealPowerX(0.0);
+			}
+			
 		}
 		else if(dx<0.0) {
-			model.setRealPowerX(dx+slowDown);
+			dx+=slowDown;
+			if(dx<0) {
+				model.setRealPowerX(dx);
+			}
+			else {
+				model.setRealPowerX(0.0);
+			}
+			
 		}
 		
 		if(dy>0.0) {
-			model.setRealPowerX(dy-slowDown);
+			dy-=slowDown;
+			if(dy>0) {
+				model.setRealPowerY(dy);
+			}
+			else {
+				model.setRealPowerY(0.0);
+			}
+			
 		}
 		else if(dy<0.0) {
-			model.setRealPowerX(dy+slowDown);
+			dy+=slowDown;
+			if(dy<0) {
+				model.setRealPowerY(dy);
+			}
+			else {
+				model.setRealPowerY(0.0);
+			}
+			
 		}
 		
 	}
@@ -546,6 +574,8 @@ public final class View
 					// ...reverse instead of reflect the reference vector...
 					dx = -dx;
 					dy = -dy;
+					model.setRealPowerX(dx);
+					model.setRealPowerY(dy);
 
 					// ...and the scaled vector too...
 					ddx = -ddx;
